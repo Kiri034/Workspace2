@@ -57,6 +57,10 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
             "Resultat": result
         }
 
+        # Initialisiere 'data_df' in st.session_state, falls es nicht existiert
+        if 'data_df' not in st.session_state:
+            st.session_state['data_df'] = pd.DataFrame(columns=["Datum", "Hämoglobin (g/dL)", "Erythrozytenzahl (10^12/L)", "Hämatokrit (%)", "MCV (fL)", "MCH (pg)", "MCHC (g/dL)", "Resultat"])
+
         # Speichere den Datensatz in der Session-State-Variable 'data_df'
         DataManager().append_record(session_state_key='data_df', record_dict=new_record)
 
