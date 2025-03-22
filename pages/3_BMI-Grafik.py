@@ -1,31 +1,62 @@
-# ====== Start Login Block ======
-from utils.login_manager import LoginManager
-LoginManager().go_to_login('Start.py')  
-# ====== End Login Block ======
-
-# ------------------------------------------------------------
-# === BMI Grafik ===
+# Here starts the graph page
 import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import io
+from datetime import datetime
 
-st.title('BMI Verlauf')
+st.title("Graph der Erythrozyten-Indizes")
 
-data_df = st.session_state['data_df']
-if data_df.empty:
-    st.info('Keine BMI Daten vorhanden. Berechnen Sie Ihren BMI auf der Startseite.')
-    st.stop()
+# Überprüfen, ob Daten in der Session vorhanden sind
+if 'data' not in st.session_state or not st.session_state['data']:
+    st.write("Es sind keine Daten verfügbar, um die Grafik zu erstellen.")
+else:
+    # Erstelle einen DataFrame aus den gespeicherten Daten
+    df = pd.DataFrame(st.session_state['data'])
 
-# Weight over time
-st.line_chart(data=data_df.set_index('timestamp')['weight'], 
-                use_container_width=True)
-st.caption('Gewicht über Zeit (kg)')
+    # Überprüfen, ob die erforderlichen Spalten vorhanden sind
+    required_columns = ['Datum', 'MCV', 'MCH', 'MCHC', 'Resultat']
+    if not all(col in df.columns for col in required_columns):
+        st.write("Die erforderlichen Spalten sind in den Daten nicht vorhanden.")
+    else:
+        # Konvertiere die Datumsspalte in ein reines Datumsformat
+        df['Datum'] = pd.to_datetime(df['Datum'], errors='coerce').dt.date
+        df = df.dropna(subset=['Datum'])
 
-# Height over time 
-st.line_chart(data=data_df.set_index('timestamp')['height'],
-                use_container_width=True)
-st.caption('Größe über Zeit (m)')
+        # Erstelle den Scatterplot
+        fig, ax = plt.subplots(figsize=(10, 6))
 
-# BMI over time
-st.line_chart(data=data_df.set_index('timestamp')['bmi'],
-                use_container_width=True)
-st.caption('BMI über Zeit')
+        # Farben basierend auf dem Resultat
+        color_map = {
+            "Normochrom, Normozytär": "green",
+            "Hypochrom, Mikrozytär": "red",
+            "Hyperchrom, Makrozytär": "blue",
+            "Andere": "orange"
+        }
+        df['Color'] = df['Resultat'].map(color_map).fillna("gray")
 
+        # Scatterplot für MCV, MCH und MCHC
+        scatter_mcv = ax.scatter(df['Datum'], df['MCV'], c=df['Color'], label='MCV', alpha=0.7)
+        scatter_mch = ax.scatter(df['Datum'], df['MCH'], c=df['Color'], label='MCH', alpha=0.7)
+        scatter_mchc = ax.scatter(df['Datum'], df['MCHC'], c=df['Color'], label='MCHC', alpha=0.7)
+
+        # Achsentitel und Legende
+        ax.set_xlabel('Datum')
+        ax.set_ylabel('Werte')
+        ax.legend()
+        plt.xticks(rotation=45)
+
+        # Plot in Streamlit anzeigen
+        st.pyplot(fig)
+
+        # Option zum Herunterladen der Grafik
+        buf = io.BytesIO()
+        fig.savefig(buf, format='png')
+        buf.seek(0)
+        file_name = f"scatter_plot_{datetime.now().strftime('%Y%m%d')}.png"
+        st.download_button(
+            label="Download Plot",
+            data=buf,
+            file_name=file_name,
+            mime='image/png'
+        )
