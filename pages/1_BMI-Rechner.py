@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
+from utils.data_manager import DataManager
 
 
 st.title("Erythrozyten Indices")
@@ -27,7 +28,6 @@ def classify_condition(mcv, mch, mchc):
     
     return f"{color_condition}, {size_condition}"
 
-# Calculate Erythrozyten Indices
 if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die Analyse durchzuführen", use_container_width=True):
     if hb > 0 and rbc > 0 and hct > 0:
         mcv = (hct / rbc) * 10
@@ -45,9 +45,7 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
         else:
             st.markdown(f"<span style='color:red'>Resultat: {result}</span>", unsafe_allow_html=True)
 
-        # update the data.csv file
-        from utils.data_manager import DataManager
-        # Create a new record with the calculated values
+        # Erstelle einen neuen Datensatz
         new_record = {
             "Datum": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "Hämoglobin (g/dL)": hb,
@@ -59,10 +57,12 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
             "Resultat": result
         }
 
+        # Speichere den Datensatz in der Session-State-Variable 'data_df'
+        DataManager().append_record(session_state_key='data_df', record_dict=new_record)
+
         st.success("Daten erfolgreich gespeichert.")
     else:
         st.error("Bitte geben Sie gültige Werte für Hämoglobin, Erythrozytenzahl und Hämatokrit ein.")
-
 
 # CSS to style the button in red and make it smaller
 st.markdown("""
