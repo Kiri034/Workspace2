@@ -8,14 +8,13 @@ st.title("Verlauf der Erythrozyten-Indizes")
 if 'data' not in st.session_state:
     st.session_state['data'] = []
 
-if st.button("Daten speichern"):
-    new_record = {
-        'Datum': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        'MCV': mcv,
-        'MCH': mch,
-        'MCHC': mchc,
-        'Resultat': result
-    }
+new_record = {
+    "Datum": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    "MCV": mcv,
+    "MCH": mch,
+    "MCHC": mchc,
+    "Resultat": result
+}
 
 st.session_state['data'].append(new_record)
 st.success("Daten erfolgreich gespeichert!")
