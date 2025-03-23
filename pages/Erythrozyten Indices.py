@@ -9,31 +9,13 @@ LoginManager().go_to_login('Start.py')
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-from webdav3.client import Client
+import os
 
 st.title("Erythrozyten Indices")
 
-# Lade Zugangsdaten aus secrets.toml
-config = {
-    'webdav_hostname': st.secrets["webdav"]["base_url"],
-    'webdav_login': st.secrets["webdav"]["username"],
-    'webdav_password': st.secrets["webdav"]["password"]
-}
-
-client = Client(config)
-
-# Hochladen der Datei zu SwitchDrive
-def upload_to_switchdrive(dataframe, remote_file):
-    try:
-        # Speichere die DataFrame-Daten in eine temporäre CSV-Datei
-        temp_file = "temp_data.csv"
-        dataframe.to_csv(temp_file, index=False)
-
-        # Lade die Datei zu SwitchDrive hoch
-        client.upload_sync(remote_path=remote_file, local_path=temp_file)
-        st.success(f"Datei erfolgreich zu SwitchDrive hochgeladen: {remote_file}")
-    except Exception as e:
-        st.error(f"Fehler beim Hochladen zu SwitchDrive: {e}")
+# Lade die CSV-Datei beim Start
+if 'data_df' not in st.session_state:
+    st.session_state['data_df'] = pd.DataFrame(columns=['Datum', 'MCV', 'MCH', 'MCHC', 'Resultat'])
 
 # Eingabefelder für Benutzer
 hb = st.number_input("Hämoglobin (g/dL)", min_value=0.0, format="%.2f")
@@ -74,10 +56,9 @@ if st.button("Analysieren"):
             'Resultat': result
         }
 
-        # Erstelle einen DataFrame mit den neuen Daten
-        new_data_df = pd.DataFrame([new_record])
-
-        # Lade die Datei direkt zu SwitchDrive hoch
-        upload_to_switchdrive(new_data_df, "/remote_folder/data_df.csv")
+        st.session_state['data_df'] = pd.concat(
+            [st.session_state['data_df'], pd.DataFrame([new_record])],
+            ignore_index=True
+        )
     else:
         st.error("Bitte geben Sie gültige Werte ein.")
