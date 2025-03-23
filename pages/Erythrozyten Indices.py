@@ -5,10 +5,6 @@ from utils.data_manager import DataManager
 
 st.title("Erythrozyten Indices")
 
-# Initialisiere session_state['data_df'], falls es nicht existiert
-if 'data_df' not in st.session_state:
-    st.session_state['data_df'] = pd.DataFrame(columns=['Datum', 'MCV', 'MCH', 'MCHC', 'Resultat'])
-
 # Eingabefelder für Benutzer
 hb = st.number_input("Hämoglobin (g/dL)", min_value=0.0, format="%.2f")
 rbc = st.number_input("Erythrozytenzahl (10^12/L)", min_value=0.0, format="%.2f")
