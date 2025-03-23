@@ -5,18 +5,24 @@ from datetime import datetime
 
 st.title("Scatterplots der Erythrozyten-Indizes")
 
-if 'data_df' in st.session_state and not st.session_state['data_df'].empty:
-    data_df = st.session_state['data_df']
+# Überprüfen, ob 'data_df' in st.session_state existiert
+if 'data_df' not in st.session_state or st.session_state['data_df'].empty:
     st.info("Es sind keine Daten verfügbar. Bitte geben Sie Ihre Werte im Rechner ein.")
     st.stop()
 
 # Erstelle einen DataFrame aus den gespeicherten Daten
-df = pd.DataFrame(st.session_state['data_df'])
+df = st.session_state['data_df']
 
+# Debugging: Zeige die Struktur des DataFrames an
+st.write("Inhalt von st.session_state['data_df']:", df)
 
-# Konvertiere die Datumsspalte in ein Datumsformat
-df['Datum'] = pd.to_datetime(df['Datum'], errors='coerce')
-df = df.dropna(subset=['Datum'])
+# Überprüfen, ob die Spalte 'Datum' existiert
+if 'Datum' in df.columns:
+    df['Datum'] = pd.to_datetime(df['Datum'], errors='coerce')
+    df = df.dropna(subset=['Datum'])
+else:
+    st.error("Die Spalte 'Datum' fehlt in den Daten.")
+    st.stop()
 
 # Scatterplot für MCV
 fig, ax = plt.subplots()
