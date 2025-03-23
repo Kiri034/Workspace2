@@ -20,30 +20,33 @@ data_df = data_df.sort_values('Datum', ascending=False)
 data_df['Datum'] = pd.to_datetime(data_df['Datum'], errors='coerce')
 data_df = data_df.dropna(subset=['Datum'])
 
-# Scatterplot für MCV über die Zeit
+# Scatterplot für MCV
 fig, ax = plt.subplots()
-ax.scatter(data_df['Datum'], data_df['MCV'], color='blue', label='MCV')
-ax.set_title('MCV (Mittleres korpuskuläres Volumen) über die Zeit')
+ax.scatter(data_df['Datum'], data_df['MCV'], c='blue', label='MCV')
+ax.set_title('MCV (Mittleres korpuskuläres Volumen) nach Datum')
 ax.set_xlabel('Datum')
 ax.set_ylabel('MCV (fL)')
+ax.legend()
 plt.xticks(rotation=45)
 st.pyplot(fig)
 
-# Scatterplot für MCH über die Zeit
+# Scatterplot für MCH
 fig, ax = plt.subplots()
-ax.scatter(data_df['Datum'], data_df['MCH'], color='green', label='MCH')
-ax.set_title('MCH (Mittleres korpuskuläres Hämoglobin) über die Zeit')
+ax.scatter(data_df['Datum'], data_df['MCH'], c='green', label='MCH')
+ax.set_title('MCH (Mittleres korpuskuläres Hämoglobin) nach Datum')
 ax.set_xlabel('Datum')
 ax.set_ylabel('MCH (pg)')
+ax.legend()
 plt.xticks(rotation=45)
 st.pyplot(fig)
 
-# Scatterplot für MCHC über die Zeit
+# Scatterplot für MCHC
 fig, ax = plt.subplots()
-ax.scatter(data_df['Datum'], data_df['MCHC'], color='red', label='MCHC')
-ax.set_title('MCHC (Mittlere korpuskuläre Hämoglobinkonzentration) über die Zeit')
+ax.scatter(data_df['Datum'], data_df['MCHC'], c='red', label='MCHC')
+ax.set_title('MCHC (Mittlere korpuskuläre Hämoglobinkonzentration) nach Datum')
 ax.set_xlabel('Datum')
 ax.set_ylabel('MCHC (g/dL)')
+ax.legend()
 plt.xticks(rotation=45)
 st.pyplot(fig)
 
