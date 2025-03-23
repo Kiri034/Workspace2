@@ -60,6 +60,9 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
             ignore_index=True
         )
 
+        # Debugging: Zeige den Inhalt von session_state['data_df']
+        st.write("Inhalt von st.session_state['data_df'] vor dem Speichern:", st.session_state['data_df'])
+
         # Speichere die Daten mit DataManager
         try:
             data_manager = DataManager()
