@@ -6,6 +6,10 @@ from utils.login_manager import LoginManager
 # initialize the data manager
 data_manager = DataManager(fs_protocol='webdav', fs_root_folder="Workspace2")  # switch drive 
 
+# initialize the login manager
+login_manager = LoginManager(data_manager)
+login_manager.login_register()  # open login/register page
+
 # load the data from the file
 data_manager.load_app_data(
     session_state_key='data_df', 
@@ -13,6 +17,7 @@ data_manager.load_app_data(
     initial_value = pd.DataFrame(), 
     parse_dates = ['timestamp']
     ) 
+# ====== End Init Block ======
 
 # here starts our app
 st.title("Anämie-App")
@@ -28,7 +33,7 @@ Die App ist anhand der folgenden Formel programmiert:
 """)
 
 
-st.write("Link zur App: https://workspace-elena-kirisha.streamlit.app/")
+st.write("Link zur App: https://workspace2.streamlit.app/Erythrozyten_Indices")
 
 
 st.markdown("""
