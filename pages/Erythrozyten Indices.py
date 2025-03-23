@@ -7,7 +7,7 @@ st.title("Erythrozyten Indices")
 
 # Initialize session state to store past values
 if 'data_df' not in st.session_state:
-    st.session_state.data = 'new_record'  # Initialize as an empty list to store records
+    st.session_state.data ['data_df'] = pd.DataFrame(columns = ['Datum', 'MCV', 'MCH', 'MCHC', 'Resultat'])
 
 # Input fields for user to enter values
 hb = st.number_input("Hämoglobin (g/dL)", min_value=0.0, format="%.2f")
@@ -57,6 +57,11 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
             'MCHC': mchc,
             'Resultat': result
         }
+
+        st.session_state['data_df'] = pd.concat(
+            [st.session_state['data_df'], pd.DataFrame([new_record])],
+            ignore_index=True
+        )
 
         # Save the data to WebDAV using DataManager
         try:
