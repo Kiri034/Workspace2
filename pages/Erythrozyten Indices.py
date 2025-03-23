@@ -58,7 +58,7 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
             "MCHC (g/dL)": mchc,
             "Resultat": result
         }
-          DataManager().append_record(session_state_key='data_df', record_dict=result)
+        DataManager().append_record(session_state_key='data_df', record_dict=result)
 
         st.success("Daten erfolgreich gespeichert.")
     else:
