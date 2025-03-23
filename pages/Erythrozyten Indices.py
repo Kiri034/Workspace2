@@ -73,6 +73,13 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
             ignore_index=True
         )
 
+               # Konvertiere die Spalte 'Datum' in ein Datumsformat
+        if 'Datum' in st.session_state['data_df'].columns:
+            st.session_state['data_df']['Datum'] = pd.to_datetime(st.session_state['data_df']['Datum'], errors='coerce')
+        else:
+            st.error("Die Spalte 'Datum' fehlt im DataFrame.")
+            st.stop()
+
         # Speichere die Daten mit DataManager
         try:
             data_manager = DataManager()
