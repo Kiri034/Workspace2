@@ -47,7 +47,7 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
 
         # Speichere die aktuellen Werte in session_state
         new_record = {
-            'Datum': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'MCV': mcv,
             'MCH': mch,
             'MCHC': mchc,
