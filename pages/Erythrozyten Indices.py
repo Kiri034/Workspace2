@@ -1,19 +1,18 @@
 # ====== Start Login Block ======
 from utils.login_manager import LoginManager
-LoginManager().go_to_login('Start.py')  
+LoginManager().go_to_login('Start.py') 
 # ====== End Login Block ======
 
 # ------------------------------------------------------------
 # here starts our app
-
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-import os
+from utils.data_manager import DataManager
 
 st.title("Erythrozyten Indices")
 
-# Lade die CSV-Datei beim Start
+# Initialisiere session_state['data_df'], falls es nicht existiert
 if 'data_df' not in st.session_state:
     st.session_state['data_df'] = pd.DataFrame(columns=['Datum', 'MCV', 'MCH', 'MCHC', 'Resultat'])
 
@@ -40,14 +39,24 @@ def classify_condition(mcv, mch, mchc):
     return f"{color_condition}, {size_condition}"
 
 # Berechnung der Indizes
-if st.button("Analysieren"):
+if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die Analyse durchzuführen", use_container_width=True):
     if hb > 0 and rbc > 0 and hct > 0:
         mcv = (hct / rbc) * 10
         mch = (hb / rbc) * 10
         mchc = (hb / hct) * 100
 
+        st.write(f"Mittleres korpuskuläres Volumen (MCV): {mcv:.2f} fL")
+        st.write(f"Mittleres korpuskuläres Hämoglobin (MCH): {mch:.2f} pg")
+        st.write(f"Mittlere korpuskuläre Hämoglobinkonzentration (MCHC): {mchc:.2f} g/dL")
+
         result = classify_condition(mcv, mch, mchc)
 
+        if result == "Normochrom, Normozytär":
+            st.write(f"Resultat: {result}")
+        else:
+            st.markdown(f"<span style='color:red'>Resultat: {result}</span>", unsafe_allow_html=True)
+
+        # Speichere die aktuellen Werte in session_state
         new_record = {
             'Datum': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'MCV': mcv,
@@ -56,9 +65,20 @@ if st.button("Analysieren"):
             'Resultat': result
         }
 
+        # Füge den neuen Datensatz zu session_state['data_df'] hinzu
         st.session_state['data_df'] = pd.concat(
             [st.session_state['data_df'], pd.DataFrame([new_record])],
             ignore_index=True
         )
+
+        # Speichere die Daten mit DataManager
+        try:
+            data_manager = DataManager()
+            data_manager.append_record(session_state_key='data_df', record_dict=new_record)
+            st.success("Daten erfolgreich gespeichert.")
+        except ValueError as e:
+            st.error(f"Fehler: {e}")
+        except Exception as e:
+            st.error(f"Ein unerwarteter Fehler ist aufgetreten: {e}")
     else:
-        st.error("Bitte geben Sie gültige Werte ein.")
+        st.error("Bitte geben Sie gültige Werte für Hämoglobin, Erythrozytenzahl und Hämatokrit ein.")
