@@ -6,6 +6,13 @@ from datetime import datetime
 
 st.title("Erythrozyten Indices")
 
+# Initialisiere 'data_df' in st.session_state, falls es nicht existiert
+if 'data_df' not in st.session_state:
+    st.session_state['data_df'] = pd.DataFrame(columns=[
+        "Datum", "Hämoglobin (g/dL)", "Erythrozytenzahl (10^12/L)", 
+        "Hämatokrit (%)", "MCV (fL)", "MCH (pg)", "MCHC (g/dL)", "Resultat"
+    ])
+
 # Input fields for user to enter values
 hb = st.number_input("Hämoglobin (g/dL)", min_value=0.0, format="%.2f")
 rbc = st.number_input("Erythrozytenzahl (10^12/L)", min_value=0.0, format="%.2f")
@@ -58,7 +65,7 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
             "MCHC (g/dL)": mchc,
             "Resultat": result
         }
-        DataManager().append_record(session_state_key='data_df', record_dict=result)
+        DataManager().append_record(session_state_key='data_df', record_dict=new_record)
 
         st.success("Daten erfolgreich gespeichert.")
     else:
