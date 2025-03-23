@@ -6,6 +6,14 @@ from utils.login_manager import LoginManager
 # initialize the data manager
 data_manager = DataManager(fs_protocol='webdav', fs_root_folder="Workspace2")  # switch drive 
 
+# load the data from the file
+data_manager.load_app_data(
+    session_state_key='data_df', 
+    file_name='data.csv', 
+    initial_value = pd.DataFrame(), 
+    parse_dates = ['timestamp']
+    ) 
+
 # here starts our app
 st.title("Anämie-App")
 

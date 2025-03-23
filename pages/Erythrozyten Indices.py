@@ -61,7 +61,7 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
         # Save the data to WebDAV using DataManager
         try:
             data_manager = DataManager()
-            data_manager.append_record(session_state_key='data_df', record_dict=new_record)
+            data_manager.append_record(session_state_key='data_df', record_dict=result)
             st.success("Daten erfolgreich gespeichert.")
         except Exception as e:
             st.error(f"Fehler beim Speichern der Daten: {e}")
