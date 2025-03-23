@@ -4,7 +4,7 @@ from utils.data_manager import DataManager
 from utils.login_manager import LoginManager
 
 # initialize the data manager
-data_manager = DataManager(fs_protocol='webdav', fs_root_folder="workspace2")  # switch drive 
+data_manager = DataManager(fs_protocol='webdav', fs_root_folder="Workspace2")  # switch drive 
 
 # here starts our app
 st.title("Anämie-App")
