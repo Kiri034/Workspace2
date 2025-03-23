@@ -1,36 +1,47 @@
-from utils import helpers
+from datetime import datetime
 
-def calculate_bmi(height, weight, timezone='Europe/Zurich'):
+def calculate_erythrozyten_indices(hb, rbc, hct):
     """
-    Calculate BMI and return a dictionary with inputs, BMI, category, and timestamp.
+    Calculate Erythrozyten indices (MCV, MCH, MCHC) and classify the condition.
 
     Args:
-        height (float): Height in meters.
-        weight (float): Weight in kilograms.
+        hb (float): Hämoglobin in g/dL.
+        rbc (float): Erythrozytenzahl in 10^12/L.
+        hct (float): Hämatokrit in %.
 
     Returns:
-        dict: A dictionary containing the inputs, calculated BMI, category, and timestamp.
+        dict: A dictionary containing the inputs, calculated indices, classification, and timestamp.
     """
-    if height <= 0 or weight <= 0:
-        raise ValueError("Height and weight must be positive values.")
+    if hb <= 0 or rbc <= 0 or hct <= 0:
+        raise ValueError("Hämoglobin, Erythrozytenzahl und Hämatokrit müssen positive Werte sein.")
 
-    bmi = weight / (height ** 2)
-    
-    if bmi < 18.5:
-        category = 'Untergewicht'
-    elif bmi < 25:
-        category = 'Normalgewicht'
-    elif bmi < 30:
-        category = 'Übergewicht'
+    # Berechnung der Indizes
+    mcv = (hct / rbc) * 10
+    mch = (hb / rbc) * 10
+    mchc = (hb / hct) * 100
+
+    # Klassifikation basierend auf den Indizes
+    if 80 <= mcv <= 100 and 27 <= mch <= 33 and 32 <= mchc <= 36:
+        classification = "Normochrom, Normozytär"
+    elif mcv < 80:
+        classification = "Mikrozytär"
+    elif mcv > 100:
+        classification = "Makrozytär"
+    elif mch < 27:
+        classification = "Hypochrom"
     else:
-        category = 'Adipositas'
+        classification = "Andere Anomalie"
 
+    # Ergebnis-Dictionary erstellen
     result_dict = {
-        "timestamp": helpers.ch_now(),
-        "height": height,
-        "weight": weight,
-        "bmi": round(bmi, 1),
-        "category": category,
-    } 
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "hb": hb,
+        "rbc": rbc,
+        "hct": hct,
+        "mcv": round(mcv, 2),
+        "mch": round(mch, 2),
+        "mchc": round(mchc, 2),
+        "classification": classification,
+    }
 
     return result_dict
