@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
 from datetime import datetime
 
-st.title("Verlauf der Erythrozyten-Indizes")
+st.title("Scatterplots der Erythrozyten-Indizes")
 
 # Überprüfen, ob 'data_df' in st.session_state existiert
 if 'data_df' not in st.session_state or st.session_state['data_df'].empty:
@@ -15,22 +16,36 @@ data_df = st.session_state['data_df']
 # Sortiere die Tabelle nach Datum (neueste zuerst)
 data_df = data_df.sort_values('Datum', ascending=False)
 
-# Konvertiere die Datumsspalte in ein Datumsformat und setze sie als Index
+# Konvertiere die Datumsspalte in ein Datumsformat
 data_df['Datum'] = pd.to_datetime(data_df['Datum'], errors='coerce')
 data_df = data_df.dropna(subset=['Datum'])
-data_df = data_df.set_index('Datum')
 
-# Diagramm für MCV über die Zeit
-st.line_chart(data=data_df['MCV'], use_container_width=True)
-st.caption('MCV (Mittleres korpuskuläres Volumen) über die Zeit (fL)')
+# Scatterplot für MCV über die Zeit
+fig, ax = plt.subplots()
+ax.scatter(data_df['Datum'], data_df['MCV'], color='blue', label='MCV')
+ax.set_title('MCV (Mittleres korpuskuläres Volumen) über die Zeit')
+ax.set_xlabel('Datum')
+ax.set_ylabel('MCV (fL)')
+plt.xticks(rotation=45)
+st.pyplot(fig)
 
-# Diagramm für MCH über die Zeit
-st.line_chart(data=data_df['MCH'], use_container_width=True)
-st.caption('MCH (Mittleres korpuskuläres Hämoglobin) über die Zeit (pg)')
+# Scatterplot für MCH über die Zeit
+fig, ax = plt.subplots()
+ax.scatter(data_df['Datum'], data_df['MCH'], color='green', label='MCH')
+ax.set_title('MCH (Mittleres korpuskuläres Hämoglobin) über die Zeit')
+ax.set_xlabel('Datum')
+ax.set_ylabel('MCH (pg)')
+plt.xticks(rotation=45)
+st.pyplot(fig)
 
-# Diagramm für MCHC über die Zeit
-st.line_chart(data=data_df['MCHC'], use_container_width=True)
-st.caption('MCHC (Mittlere korpuskuläre Hämoglobinkonzentration) über die Zeit (g/dL)')
+# Scatterplot für MCHC über die Zeit
+fig, ax = plt.subplots()
+ax.scatter(data_df['Datum'], data_df['MCHC'], color='red', label='MCHC')
+ax.set_title('MCHC (Mittlere korpuskuläre Hämoglobinkonzentration) über die Zeit')
+ax.set_xlabel('Datum')
+ax.set_ylabel('MCHC (g/dL)')
+plt.xticks(rotation=45)
+st.pyplot(fig)
 
 # Option zum Herunterladen der Daten als CSV
 csv = data_df.reset_index().to_csv(index=False).encode('utf-8')
