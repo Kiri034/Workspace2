@@ -5,6 +5,12 @@ from datetime import datetime
 
 st.title("Scatterplots der Erythrozyten-Indizes")
 
+if 'data' not in st.session_state:
+    st.session_state['data'] = []
+
+st.session_state['data'].append(new_record)
+st.success("Daten erfolgreich gespeichert!")
+
 # Überprüfen, ob 'data' in st.session_state existiert
 if 'data' not in st.session_state or not st.session_state['data']:
     st.info("Es sind keine Daten verfügbar. Bitte geben Sie Ihre Werte im Rechner ein.")
