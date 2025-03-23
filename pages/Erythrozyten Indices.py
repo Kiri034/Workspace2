@@ -9,23 +9,23 @@ st.title("Erythrozyten Indices")
 # Initialisiere 'data_df' in st.session_state, falls es nicht existiert
 if 'data_df' not in st.session_state:
     st.session_state['data_df'] = pd.DataFrame(columns=[
-        "Datum", "Hämoglobin (g/dL)", "Erythrozytenzahl (10^12/L)", 
-        "Hämatokrit (%)", "MCV (fL)", "MCH (pg)", "MCHC (g/dL)", "Resultat"
+        "Datum", "Haemoglobin (g/dL)", "Erythrozytenzahl (10^12/L)", 
+        "Haematokrit (%)", "MCV (fL)", "MCH (pg)", "MCHC (g/dL)", "Resultat"
     ])
 
 # Input fields for user to enter values
-hb = st.number_input("Hämoglobin (g/dL)", min_value=0.0, format="%.2f")
+hb = st.number_input("Haemoglobin (g/dL)", min_value=0.0, format="%.2f")
 rbc = st.number_input("Erythrozytenzahl (10^12/L)", min_value=0.0, format="%.2f")
-hct = st.number_input("Hämatokrit (%)", min_value=0.0, format="%.2f")
+hct = st.number_input("Haematokrit (%)", min_value=0.0, format="%.2f")
 
 def classify_condition(mcv, mch, mchc):
-    size_condition = "Normozytär"
+    size_condition = "Normozytaer"
     color_condition = "Normochrom"
     
     if mcv < 80:
-        size_condition = "Mikrozytär"
+        size_condition = "Mikrozytaer"
     elif mcv > 100:
-        size_condition = "Makrozytär"
+        size_condition = "Makrozytaer"
     
     if mch < 27 or mchc < 33:
         color_condition = "Hypochrom"
@@ -35,19 +35,19 @@ def classify_condition(mcv, mch, mchc):
     return f"{color_condition}, {size_condition}"
 
 # Calculate Erythrozyten Indices
-if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die Analyse durchzuführen", use_container_width=True):
+if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die Analyse durchzufuehren", use_container_width=True):
     if hb > 0 and rbc > 0 and hct > 0:
         mcv = (hct / rbc) * 10
         mch = (hb / rbc) * 10
         mchc = (hb / hct) * 100
 
-        st.write(f"Mittleres korpuskuläres Volumen (MCV): {mcv:.2f} fL")
-        st.write(f"Mittleres korpuskuläres Hämoglobin (MCH): {mch:.2f} pg")
-        st.write(f"Mittlere korpuskuläre Hämoglobinkonzentration (MCHC): {mchc:.2f} g/dL")
+        st.write(f"Mittleres korpuskulaeres Volumen (MCV): {mcv:.2f} fL")
+        st.write(f"Mittleres korpuskulaeres Haemoglobin (MCH): {mch:.2f} pg")
+        st.write(f"Mittlere korpuskulaere Haemoglobinkonzentration (MCHC): {mchc:.2f} g/dL")
 
         result = classify_condition(mcv, mch, mchc)
         
-        if result == "Normochrom, Normozytär":
+        if result == "Normochrom, Normozytaer":
             st.write(f"Resultat: {result}")
         else:
             st.markdown(f"<span style='color:red'>Resultat: {result}</span>", unsafe_allow_html=True)
@@ -57,9 +57,9 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
         # Create a new record with the calculated values
         new_record = {
             "Datum": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "Hämoglobin (g/dL)": hb,
+            "Haemoglobin (g/dL)": hb,
             "Erythrozytenzahl (10^12/L)": rbc,
-            "Hämatokrit (%)": hct,
+            "Haematokrit (%)": hct,
             "MCV (fL)": mcv,
             "MCH (pg)": mch,
             "MCHC (g/dL)": mchc,
@@ -69,7 +69,7 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
 
         st.success("Daten erfolgreich gespeichert.")
     else:
-        st.error("Bitte geben Sie gültige Werte für Hämoglobin, Erythrozytenzahl und Hämatokrit ein.")
+        st.error("Bitte geben Sie gültige Werte für Hämoglobin, Erythrozytenzahl und Haematokrit ein.")
 
 
 # CSS to style the button in red and make it smaller
