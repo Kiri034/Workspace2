@@ -7,7 +7,7 @@ st.title("Erythrozyten Indices")
 
 # Initialize session state to store past values
 if 'data' not in st.session_state:
-    st.session_state.data = []
+    st.session_state.data = 'new_record'
 
 # Input fields for user to enter values
 hb = st.number_input("Hämoglobin (g/dL)", min_value=0.0, format="%.2f")
