@@ -58,6 +58,14 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
             'Resultat': result
         }
 
+        if 'data_df' not in st.session_state:
+            st.session_state['data_df'] = pd.DataFrame(columns=['Datum', 'MCV', 'MCH', 'MCHC', 'Resultat'])
+
+        st.session_state['data_df'] = pd.concat(
+            [st.session_state['data_df'], pd.DataFrame([new_record])],
+            ignore_index=True
+        )
+       
         # Save the data to WebDAV using DataManager
         try:
             data_manager = DataManager()

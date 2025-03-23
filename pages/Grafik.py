@@ -5,25 +5,14 @@ from datetime import datetime
 
 st.title("Scatterplots der Erythrozyten-Indizes")
 
-if 'data' not in st.session_state:
-    st.session_state['data'] = []
-
-st.session_state['data'].append(new_record)
-st.success("Daten erfolgreich gespeichert!")
-
-# Überprüfen, ob 'data' in st.session_state existiert
-if 'data' not in st.session_state or not st.session_state['data']:
+if 'data_df' in st.session_state and not st.session_state['data_df'].empty:
+    data_df = st.session_state['data_df']
     st.info("Es sind keine Daten verfügbar. Bitte geben Sie Ihre Werte im Rechner ein.")
     st.stop()
 
 # Erstelle einen DataFrame aus den gespeicherten Daten
-df = pd.DataFrame(st.session_state['data'])
+df = pd.DataFrame(st.session_state['data_df'])
 
-# Überprüfen, ob die erforderlichen Spalten vorhanden sind
-required_columns = ['Datum', 'MCV', 'MCH', 'MCHC']
-if not all(col in df.columns for col in required_columns):
-    st.error("Die erforderlichen Spalten sind in den Daten nicht vorhanden.")
-    st.stop()
 
 # Konvertiere die Datumsspalte in ein Datumsformat
 df['Datum'] = pd.to_datetime(df['Datum'], errors='coerce')
