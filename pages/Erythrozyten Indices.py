@@ -64,6 +64,8 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
             'MCHC': mchc,
             'Resultat': result
         }
+        # Entferne leere Werte aus dem Dict
+        new_record = {k: v for k ,v in new_record.items() if k in st.session_state['data_df'].columns}
 
         # Füge den neuen Datensatz zu session_state['data_df'] hinzu
         st.session_state['data_df'] = pd.concat(
