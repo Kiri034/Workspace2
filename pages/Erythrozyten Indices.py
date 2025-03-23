@@ -6,8 +6,8 @@ from utils.data_manager import DataManager
 st.title("Erythrozyten Indices")
 
 # Initialize session state to store past values
-if 'data' not in st.session_state:
-    st.session_state.data = 'new_record'
+if 'data_df' not in st.session_state:
+    st.session_state.data_df = pd.DataFrame()  # Initialize as an empty DataFrame to store records
 
 # Input fields for user to enter values
 hb = st.number_input("Hämoglobin (g/dL)", min_value=0.0, format="%.2f")
