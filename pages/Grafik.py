@@ -8,13 +8,19 @@ st.title("Verlauf der Erythrozyten-Indizes")
 if 'data' not in st.session_state:
     st.session_state['data'] = []
 
-new_record = {
-    "Datum": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    "MCV": mcv,
-    "MCH": mch,
-    "MCHC": mchc,
-    "Resultat": result
-}
+mcv = st.number_input("MCV (Mittleres korpuskuläres Volumen) in fL:", min_value=0.0, step=0.1)
+mch = st.number_input("MCH (Mittleres korpuskuläres Hämoglobin) in pg:", min_value=0.0, step=0.1)
+mchc = st.number_input("MCHC (Mittlere korpuskuläre Hämoglobinkonzentration) in g/dL:", min_value=0.0, step=0.1)
+result = st.text_input("Resultat (optional):")
+
+if st.button("Daten speichern"):
+    new_record = {
+        'Datum': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        'MCV': mcv,
+        'MCH': mch,
+        'MCHC': mchc,
+        'Resultat': result
+    }
 
 st.session_state['data'].append(new_record)
 st.success("Daten erfolgreich gespeichert!")
