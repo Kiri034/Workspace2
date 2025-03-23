@@ -13,8 +13,6 @@ if 'data_df' not in st.session_state or st.session_state['data_df'].empty:
 # Erstelle einen DataFrame aus den gespeicherten Daten
 df = st.session_state['data_df']
 
-# Debugging: Zeige die Struktur des DataFrames an
-st.write("Inhalt von st.session_state['data_df']:", df)
 
 # Überprüfen, ob die Spalte 'Datum' existiert
 if 'Datum' in df.columns:
