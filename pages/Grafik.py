@@ -8,7 +8,7 @@ st.title("Verlauf der Erythrozyten-Indizes")
 if 'data' not in st.session_state:
     st.session_state['data'] = []
 
-st.session_state['data'].append(result)
+st.session_state['data'].append(new_record)
 st.success("Daten erfolgreich gespeichert!")
 
 # Überprüfen, ob Daten in der Session vorhanden sind
