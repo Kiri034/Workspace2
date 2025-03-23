@@ -5,16 +5,16 @@ from utils.data_manager import DataManager
 
 st.title("Erythrozyten Indices")
 
-# Initialize session state to store past values
+# Initialisiere session_state['data_df'], falls es nicht existiert
 if 'data_df' not in st.session_state:
-    st.session_state.data_df = pd.DataFrame()  # Initialize as an empty DataFrame to store records
+    st.session_state['data_df'] = pd.DataFrame(columns=['Datum', 'MCV', 'MCH', 'MCHC', 'Resultat'])
 
-# Input fields for user to enter values
+# Eingabefelder für Benutzer
 hb = st.number_input("Hämoglobin (g/dL)", min_value=0.0, format="%.2f")
 rbc = st.number_input("Erythrozytenzahl (10^12/L)", min_value=0.0, format="%.2f")
 hct = st.number_input("Hämatokrit (%)", min_value=0.0, format="%.2f")
 
-# Function to classify the condition based on MCV, MCH, and MCHC
+# Funktion zur Klassifikation
 def classify_condition(mcv, mch, mchc):
     size_condition = "Normozytär"
     color_condition = "Normochrom"
@@ -31,7 +31,7 @@ def classify_condition(mcv, mch, mchc):
 
     return f"{color_condition}, {size_condition}"
 
-# Calculate Erythrozyten Indices
+# Berechnung der Indizes
 if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die Analyse durchzuführen", use_container_width=True):
     if hb > 0 and rbc > 0 and hct > 0:
         mcv = (hct / rbc) * 10
@@ -49,7 +49,7 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
         else:
             st.markdown(f"<span style='color:red'>Resultat: {result}</span>", unsafe_allow_html=True)
 
-        # Save the current values to session state
+        # Speichere die aktuellen Werte in session_state
         new_record = {
             'Datum': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'MCV': mcv,
@@ -58,29 +58,23 @@ if st.button("Analysieren", key="analyze_button", help="Klicken Sie hier, um die
             'Resultat': result
         }
 
+        # Füge den neuen Datensatz zu session_state['data_df'] hinzu
         st.session_state['data_df'] = pd.concat(
             [st.session_state['data_df'], pd.DataFrame([new_record])],
             ignore_index=True
         )
-       
-        # Save the data to WebDAV using DataManager
+
+        # Debugging: Zeige den Inhalt von session_state['data_df']
+        st.write("Inhalt von st.session_state['data_df'] vor dem Speichern:", st.session_state['data_df'])
+
+        # Speichere die Daten mit DataManager
         try:
             data_manager = DataManager()
             data_manager.append_record(session_state_key='data_df', record_dict=new_record)
             st.success("Daten erfolgreich gespeichert.")
+        except ValueError as e:
+            st.error(f"Fehler: {e}")
         except Exception as e:
-            st.error(f"Fehler beim Speichern der Daten: {e}")
+            st.error(f"Ein unerwarteter Fehler ist aufgetreten: {e}")
     else:
         st.error("Bitte geben Sie gültige Werte für Hämoglobin, Erythrozytenzahl und Hämatokrit ein.")
-
-# CSS to style the button in red and make it smaller
-st.markdown("""
-    <style>
-    .stButton button {
-        background-color: red;
-        color: white;
-        font-size: 10px;  /* Reduced font size */
-        padding: 4px 8px;  /* Reduced padding */
-    }
-    </style>
-    """, unsafe_allow_html=True)
