@@ -6,7 +6,7 @@ from utils.data_manager import DataManager
 st.title("Erythrozyten Indices")
 
 # Initialize session state to store past values
-if 'data' not in st.session_state:
+if 'data_df' not in st.session_state:
     st.session_state.data = []  # Initialize as an empty list to store records
 
 # Input fields for user to enter values
